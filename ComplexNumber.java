@@ -15,7 +15,7 @@ class ComplexNumber {
         return 0;
     }
     
-    public ComplexNumber plus(final ComplexNumber other) {
+    final public ComplexNumber plus(final ComplexNumber other) {
         return null;
     }
     
@@ -35,6 +35,6 @@ class ComplexNumber {
     }
 
     static public void main(String[] args){
-        // main vuoto
+        ComplexNumber number = new ComplexNumber(4, 8);
     }
 }
