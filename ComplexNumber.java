@@ -12,19 +12,22 @@ class ComplexNumber {
     }
 
     public double getReal() {
-        return 0;
+        return this.real;
+    }
+
+    final public ComplexNumber plus(final ComplexNumber a, final ComplexNumber b) {
+        double somma = (a.real + b.real) + (a.imaginary + b.imaginary);
+        return somma;
     }
     
-    final public ComplexNumber plus(final ComplexNumber other) {
-        return null;
-    }
-    
-    public ComplexNumber sub(final ComplexNumber other) {
-        return null;
+    public ComplexNumber sub(final ComplexNumber a, final ComplexNumber b) {
+        double sottrazione = (a.real - b.real) - (a.imaginary - b.imaginary);
+        return sottrazione;
     }
 
     public ComplexNumber times(final ComplexNumber other) {
-        return null;
+        double moltiplicazione = 
+        return moltiplicazione;
     }
 
     public ComplexNumber div(final ComplexNumber other) {
