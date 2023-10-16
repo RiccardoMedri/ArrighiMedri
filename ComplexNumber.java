@@ -8,7 +8,7 @@ class ComplexNumber {
     }
 
     public ComplexNumber (final double numero) {
-        
+
     }
 
     public double getImaginary() {
@@ -19,7 +19,7 @@ class ComplexNumber {
         return this.real;
     }
     
-    public ComplexNumber plus(final ComplexNumber a, final ComplexNumber b) {
+    final public ComplexNumber plus(final ComplexNumber a, final ComplexNumber b) {
         double somma = (a.getReal() + b.getReal()) + (a.getImaginary() + b.getImaginary());
         return new ComplexNumber (somma);
     }
@@ -42,6 +42,6 @@ class ComplexNumber {
     }
 
     static public void main(String[] args){
-        // main vuoto
+        ComplexNumber number = new ComplexNumber(4, 8);
     }
 }
