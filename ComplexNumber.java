@@ -7,6 +7,10 @@ class ComplexNumber {
         this.imaginary = imaginary;
     }
 
+    public ComplexNumber (final double numero) {
+        
+    }
+
     public double getImaginary() {
         return imaginary;
     }
@@ -16,17 +20,17 @@ class ComplexNumber {
     }
     
     public ComplexNumber plus(final ComplexNumber a, final ComplexNumber b) {
-        double somma = (a.real + b.real) + (a.imaginary + b.imaginary);
-        return somma;
+        double somma = (a.getReal() + b.getReal()) + (a.getImaginary() + b.getImaginary());
+        return new ComplexNumber (somma);
     }
     
     public ComplexNumber sub(final ComplexNumber a, final ComplexNumber b) {
-        double sottrazione = (a.real - b.real) - (a.imaginary - b.imaginary);
+        ComplexNumber sottrazione = (a.getReal() - b.getReal()) - (a.getImaginary() - b.getImaginary());
         return sottrazione;
     }
 
     public ComplexNumber times(final ComplexNumber other) {
-        double moltiplicazione = 
+        ComplexNumber moltiplicazione = ((a.getReal() * b.getReal()) - (a.getImaginary() * b.getImaginary())) + ((a.getReal() * b.getImaginary()) + (a.getImaginary() * b.getReal()));
         return moltiplicazione;
     }
 
