@@ -20,8 +20,8 @@ class ComplexNumber {
         return somma;
     }
     
-    public double sub(final ComplexNumber a, final ComplexNumber b) {
-        double sottrazione = (a.getReal() - b.getReal()) - (a.getImaginary() - b.getImaginary());
+    public ComplexNumber sub(final ComplexNumber a, final ComplexNumber b) {
+        ComplexNumber sottrazione = new ComplexNumber((a.getReal() - b.getReal()), (a.getImaginary() - b.getImaginary()));
         return sottrazione;
     }
 
@@ -39,5 +39,8 @@ class ComplexNumber {
 
     static public void main(String[] args){
         ComplexNumber number = new ComplexNumber(4, 8);
+        ComplexNumber number2;
+
+        number2 = number.sub(new ComplexNumber(10, 3), new ComplexNumber(6, 9));
     }
 }
