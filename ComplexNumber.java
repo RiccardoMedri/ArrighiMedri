@@ -19,8 +19,7 @@ class ComplexNumber {
         double parteReale = this.real + a.real;
         double parteImmaginaria = this.imaginary + a.imaginary;
         return new ComplexNumber(parteReale, parteImmaginaria);
-    }
-    
+    } 
     public double sub(final ComplexNumber a, final ComplexNumber b) {
         double sottrazione = (a.getReal() - b.getReal()) - (a.getImaginary() - b.getImaginary());
         return sottrazione;
