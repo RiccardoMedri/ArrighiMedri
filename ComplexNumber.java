@@ -16,10 +16,11 @@ class ComplexNumber {
     }
     
     public ComplexNumber plus(final ComplexNumber a) {
-        double parteReale = this.real + a.real;
-        double parteImmaginaria = this.imaginary + a.imaginary;
+        double parteReale = this.getReal() + a.getReal();
+        double parteImmaginaria = this.getImaginary() + a.getImaginary();
         return new ComplexNumber(parteReale, parteImmaginaria);
-    } 
+    }
+
     public double sub(final ComplexNumber a, final ComplexNumber b) {
         double sottrazione = (a.getReal() - b.getReal()) - (a.getImaginary() - b.getImaginary());
         return sottrazione;
@@ -39,5 +40,10 @@ class ComplexNumber {
 
     static public void main(String[] args){
         ComplexNumber number = new ComplexNumber(4, 8);
+        ComplexNumber number2 = new ComplexNumber(5, 10);
+        ComplexNumber somma = number.plus(number2); 
+        System.out.println(somma.getReal());
+        System.out.println(somma.getImaginary());
+
     }
 }
