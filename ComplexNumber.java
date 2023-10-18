@@ -40,16 +40,14 @@ class ComplexNumber {
 
     static public void main(String[] args){
         ComplexNumber number = new ComplexNumber(4, 8);
-<<<<<<< HEAD
+
         ComplexNumber number2;
 
         number2 = number.sub(new ComplexNumber(10, 3), new ComplexNumber(6, 9));
-=======
+
         ComplexNumber number3 = new ComplexNumber(5, 10);
         ComplexNumber somma = number.plus(number3); 
         System.out.println(somma.getReal());
         System.out.println(somma.getImaginary());
-
->>>>>>> 133af1dd9221afcc850366f2a72af0ed317e3848
     }
 }
