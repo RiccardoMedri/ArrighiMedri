@@ -26,9 +26,10 @@ class ComplexNumber {
         return sottrazione;
     }
 
-    public double times(final ComplexNumber a, final ComplexNumber b) {
-        double moltiplicazione = ((a.getReal() * b.getReal()) - (a.getImaginary() * b.getImaginary())) + ((a.getReal() * b.getImaginary()) + (a.getImaginary() * b.getReal()));
-        return moltiplicazione;
+    public ComplexNumber times(final ComplexNumber b) {
+        double parteReale = (this.getReal() * b.getReal()) - (this.getImaginary() * b.getImaginary());
+        double parteImmaginaria = (this.getReal() * b.getImaginary()) + (this.getImaginary() * b.getReal());
+        return new ComplexNumber(parteReale, parteImmaginaria);
     }
 
     public ComplexNumber div(final ComplexNumber other) {
@@ -41,8 +42,11 @@ class ComplexNumber {
     static public void main(String[] args){
         ComplexNumber number = new ComplexNumber(4, 8);
         ComplexNumber number2 = new ComplexNumber(5, 10);
-        ComplexNumber somma = number.plus(number2); 
-        System.out.println(somma.getReal());
+        ComplexNumber somma = number.plus(number2);
+        ComplexNumber prodotto = number.times(number2);
+        System.out.print(prodotto.getReal() + " ");
+        System.out.println(prodotto.getImaginary()); 
+        System.out.print(somma.getReal() + " ");
         System.out.println(somma.getImaginary());
 
     }
