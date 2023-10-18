@@ -8,16 +8,17 @@ class ComplexNumber {
     }
 
     public double getImaginary() {
-        return imaginary;
+        return this.imaginary;
     }
 
     public double getReal() {
         return this.real;
     }
     
-    final public double plus(final ComplexNumber a, final ComplexNumber b) {
-        double somma = (a.getReal() + b.getReal()) + (a.getImaginary() + b.getImaginary());
-        return somma;
+    public ComplexNumber plus(final ComplexNumber a) {
+        double parteReale = this.real + a.real;
+        double parteImmaginaria = this.imaginary + a.imaginary;
+        return new ComplexNumber(parteReale, parteImmaginaria);
     }
     
     public double sub(final ComplexNumber a, final ComplexNumber b) {
