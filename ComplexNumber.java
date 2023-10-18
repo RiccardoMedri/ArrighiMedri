@@ -20,9 +20,9 @@ class ComplexNumber {
         double parteImmaginaria = this.getImaginary() + a.getImaginary();
         return new ComplexNumber(parteReale, parteImmaginaria);
     }
-
-    public double sub(final ComplexNumber a, final ComplexNumber b) {
-        double sottrazione = (a.getReal() - b.getReal()) - (a.getImaginary() - b.getImaginary());
+    
+    public ComplexNumber sub(final ComplexNumber a, final ComplexNumber b) {
+        ComplexNumber sottrazione = new ComplexNumber((a.getReal() - b.getReal()), (a.getImaginary() - b.getImaginary()));
         return sottrazione;
     }
 
@@ -41,13 +41,14 @@ class ComplexNumber {
 
     static public void main(String[] args){
         ComplexNumber number = new ComplexNumber(4, 8);
-        ComplexNumber number2 = new ComplexNumber(5, 10);
-        ComplexNumber somma = number.plus(number2);
+        ComplexNumber number2;
+        number2 = number.sub(new ComplexNumber(10, 3), new ComplexNumber(6, 9));
+        ComplexNumber number3 = new ComplexNumber(5, 10);
+        ComplexNumber somma = number.plus(number3); 
+        System.out.print(somma.getReal() + " ");
+        System.out.println(somma.getImaginary());
         ComplexNumber prodotto = number.times(number2);
         System.out.print(prodotto.getReal() + " ");
         System.out.println(prodotto.getImaginary()); 
-        System.out.print(somma.getReal() + " ");
-        System.out.println(somma.getImaginary());
-
     }
 }
