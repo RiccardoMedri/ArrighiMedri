@@ -39,6 +39,10 @@ class ComplexNumber {
         return new ComplexNumber(realNumerator / commonDenominator, imaginaryNumerator / commonDenominator);
     }
 
+    public String toString() {
+        return this.getReal() + " " + this.getImaginary();
+    }
+    
     static public void main(String[] args){
         ComplexNumber number = new ComplexNumber(4, 8);
         ComplexNumber number2;
