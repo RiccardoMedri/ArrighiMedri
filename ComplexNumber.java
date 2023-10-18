@@ -53,6 +53,8 @@ class ComplexNumber {
         System.out.println(somma.getImaginary());
         ComplexNumber prodotto = number.times(number2);
         System.out.print(prodotto.getReal() + " ");
-        System.out.println(prodotto.getImaginary()); 
+        System.out.println(prodotto.getImaginary());
+        String stringa = number.toString();
+        System.out.println(stringa); 
     }
 }
