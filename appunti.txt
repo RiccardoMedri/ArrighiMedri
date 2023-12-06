@@ -1,3 +1,8 @@
 comunicazione HTTP (con studio integrato per la parte teorica in MQTT)
 Progetto configurabile (== il cliente che compra il nostro servizio deve essere in grado, tramite un'interfaccia ad esempio, di poter espanderlo il servizio stesso)
 Identificazione tramite mac address durante la chiamata tra esp e server; 
+IDT = id numero tessera (per http e mqtt)
+IDM = id messaggio (per mqtt)
+Mac = Mac address (dell'esp)
+IDT serve per identificare la tessera utente nella richiesta http altrimenti anonima, va nel body del pacchettto
+IDM in mqtt va nel contenuto del messaggio insieme a IDT
