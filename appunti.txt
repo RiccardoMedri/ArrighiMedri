@@ -6,3 +6,6 @@ IDM = id messaggio (per mqtt)
 Mac = Mac address (dell'esp)
 IDT serve per identificare la tessera utente nella richiesta http altrimenti anonima, va nel body del pacchettto
 IDM in mqtt va nel contenuto del messaggio insieme a IDT
+
+Disabilitare la gui = sudo systemctl set-default multi-user.target
+Abilitare la gui = sudo systemctl set-default graphical.target
