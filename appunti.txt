@@ -1,0 +1,3 @@
+comunicazione HTTP (con studio integrato per la parte teorica in MQTT)
+Progetto configurabile (== il cliente che compra il nostro servizio deve essere in grado, tramite un'interfaccia ad esempio, di poter espanderlo il servizio stesso)
+Identificazione tramite mac address durante la chiamata tra esp e server; 
