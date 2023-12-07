@@ -3,11 +3,14 @@ const app = express();
 const port = 3000;
 const home = require('./routes/router-home.js');
 const tessere = require('./routes/router-tessere.js');
+const newCard = require('./routes/router-addNewCard.js');
 
 app.use(express.static('public'));
 
 app.use(home);
 app.use(tessere);
+app.use(newCard);
+
 
 app.use(function(req,res,next){
     res.setHeader('Content-Type', 'text/plain');
@@ -15,5 +18,5 @@ app.use(function(req,res,next){
 });
 
 app.listen(port, function () {
-    console.log('Listening on port '+port);
+    console.log('Listening on port ' + port);
 });
