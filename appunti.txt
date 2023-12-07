@@ -9,3 +9,9 @@ IDM in mqtt va nel contenuto del messaggio insieme a IDT
 
 Disabilitare la gui = sudo systemctl set-default multi-user.target
 Abilitare la gui = sudo systemctl set-default graphical.target
+
+CUSTOMIZZAZIONE:
+  descrizio: creare un'interfaccia con una serie di <li>. Per ogni li creare una funzionalità che permatta di customizzare il servizio
+  - aggiunta di un nuovo bedge ad un dipendente (inserire dati su interfaccia e collegarli ad una tessera)
+  - limitazione di numero di bedgate che si possono fare (finestra con tutti i numeri pre impostati)
+  
