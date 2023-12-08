@@ -12,6 +12,8 @@ Abilitare la gui = sudo systemctl set-default graphical.target
 
 Gestire la possibilità di aggiungere un nuovo scanner nfc
 
+Utilizziamo 2 dispistivi differenti uno per il check della carta (entrata e uscita dei dipendenti) e uno per aggiungere e rimuvoere le carte: questo per un motivo di sicurezza, ovvero così facendo non permettiamo a tutti i dispositivi di poter aggiungere e rimuovere tessere rendendo così il sistema meno vulnerabile.
+
 CUSTOMIZZAZIONE:
   descrizio: creare un'interfaccia con una serie di <li>. Per ogni li creare una funzionalità che permatta di customizzare il servizio
   - aggiunta di un nuovo bedge ad un dipendente (inserire dati su interfaccia e collegarli ad una tessera)
