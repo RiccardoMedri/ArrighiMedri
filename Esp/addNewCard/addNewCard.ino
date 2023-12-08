@@ -24,6 +24,7 @@ String urlDB = "http://X.X.X.X/addCard";
 void setup() {
   Serial.begin(115200);
   delay(10);
+  connessione();
   setupRouting();
 }
 
@@ -73,9 +74,27 @@ void handleCredential() {
 String addToDB(String url, String nome, String cognome, String ruolo){
   HTTPClient http;
   String urlCompleto = url + "/" + nome + "-" + cognome + "-" + ruolo;
-  http.begin(wifiClient, url.c_str());
+  http.begin(wifiClient, urlCompleto.c_str());
   
   int httResponseCode = http.GET()
 
+    if (httpResponseCode > 0) {
+    String response = "";
+    switch (httpResponseCode){
+      case 200:
+        response = http.getString();
+      break;
+      case 404:
+        response = "risorsa non disponibile";
+      break;
+      default:
+        response = "codice di errore: " + String(httpResponseCode);
+      break;
+    }
+    http.end();
+    Serial.println(response);
+    return response;
+  }
+  
   http.end();
 }
