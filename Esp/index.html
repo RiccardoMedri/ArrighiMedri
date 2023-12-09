@@ -1,0 +1,32 @@
+<!DOCTYPE HTML><html><head>
+    <title>ESP Input Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head><body>
+        <ul style = "list-style-type: none;">
+            <li>
+                <p>Inserire i dati per una nuova tessera</p>
+                <form action="/addCard">
+                    Nome: <input type="text" name="nome">
+                    Cognome: <input type="text" name="cognome">
+                    Ruolo: <input type="text" name="ruolo">
+                    <input type="submit" value="Submit">
+                </form>
+            </li>
+            <li style = "padding-top: 3%;">
+                <p>Limitare il numero di accessi</p>
+                <form action="">
+                    <select name = "number" id = "number">
+                    </select>
+                </form>
+            </li>
+        </ul>
+    <br>
+    </body>
+    <script>
+        let res = "";
+        for(let i = 0; i < 101; ++i) {
+            res += "<option>" + i + "</option>";
+        }
+        document.getElementById("number").innerHTML = res;
+    </script>
+</html>

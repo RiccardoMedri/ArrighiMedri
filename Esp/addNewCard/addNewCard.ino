@@ -56,7 +56,12 @@ void connessione() {
 void setupRouting() {
     server.on("/addCard", handleCredential);
     server.on("/", handleHome);
+    server.on("/limitAccess", handleAccess);
     server.begin();
+}
+
+void handleAccess() {
+  
 }
 
 void handleHome(){
