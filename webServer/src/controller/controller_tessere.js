@@ -7,7 +7,7 @@ module.exports.checkTessera = async function(req, res){
         function(err, results, fields) {
             if (results.length > 0 && results[0]['idtessera'] == req.params.id) {
                 console.log('tessera presente');
-                res.json(results);
+                res.send("tessera presente");
 
                 const data = new Date().toISOString().slice(0, 10);
                 const orario = new Date().toLocaleTimeString();
@@ -18,7 +18,7 @@ module.exports.checkTessera = async function(req, res){
                     function(insertErr, insertResults, insertFields) {
                         if (insertErr) {
                             console.error(insertErr);
-                            return res.status(500).json({ error: 'Inserimento a ingressi table non riuscito' });
+                            return res.status(500).send('Inserimento a ingressi tabelle non riuscito');
                         }
                         console.log('Ingresso registrato');
                     }
@@ -26,7 +26,7 @@ module.exports.checkTessera = async function(req, res){
             }
             else {
                 console.log('errore');
-                res.status(404).json({ error: 'Tessera non presente' });
+                res.status(404).send('Tessera non presente');
             }
         }
     )
