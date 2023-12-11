@@ -23,6 +23,7 @@ const char index_html[] PROGMEM = R"rawliteral(
 ESP8266WebServer server(80);
 WiFiClient wifiClient;
 String urlDB = "http://0.0.0.0/tessera/nuovaTessera";
+const String macAddress;
 
 void setup() {
   delay(6000);
@@ -30,6 +31,7 @@ void setup() {
   delay(10);
   connessione();
   setupRouting();
+  macAddress = WiFi.macAddress();
 }
 
 void loop() {
@@ -85,7 +87,7 @@ String addToDB(String url, String nome, String cognome, String ruolo){
   // scansione del nfc e recupero idtessera
 
   HTTPClient http;
-  String urlCompleto = url + "/" + "000" + "-" + nome + "-" + cognome + "-" + ruolo;
+  String urlCompleto = url + "/" + "000" + "-" + nome + "-" + cognome + "-" + ruolo + "-" + macAddress;
   http.begin(wifiClient, urlCompleto.c_str());
   
   int httpResponseCode = http.GET();

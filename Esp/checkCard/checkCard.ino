@@ -6,6 +6,7 @@
 
 const char* ssid = "";
 const char* password = "";
+const String macAddress;
 
 String urlDB = "http://0.0.0.0/tessera";
 
@@ -16,6 +17,7 @@ void setup() {
     // pinMode(PIN_LED_RED, OUTPUT);
     // pinMode(PIN_LED_GREEN, OUTPUT);
     connessione();
+    macAddress = WiFi.macAddress();
 }
 
 void loop() {
@@ -57,7 +59,7 @@ void connessione() {
 
 bool checkID(String idTessera, String url) {
     HTTPClient http;
-    String urlCompleto = url + "/" + idTessera;
+    String urlCompleto = url + "/" + idTessera + "-" + macAddress;
     http.begin(wifiClient, urlCompleto.c_str());
 
     int httpResponseCode = http.GET();
