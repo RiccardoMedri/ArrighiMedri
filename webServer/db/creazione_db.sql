@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `progettoIoT`.`tessere` (
   `nome` VARCHAR(100) NOT NULL,
   `cognome` VARCHAR(512) NOT NULL,
   `ruolo` VARCHAR(45) NOT NULL,
+  `limite` INT,
   PRIMARY KEY (`idtessera`))
 ENGINE = InnoDB;
 

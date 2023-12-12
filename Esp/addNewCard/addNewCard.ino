@@ -63,7 +63,30 @@ void setupRouting() {
 }
 
 void handleAccess() {
-  
+  int limit = server.arg("number");
+  HTTPClient http;
+
+  http.begin(wifiClient, .c_str());
+  int httpResponseCode = http.GET();
+
+  if (httpResponseCode > 0) {
+    String response;
+    switch (httpResponseCode){
+      case 200:
+        response = http.getString();
+      break;
+      case 404:
+        response = "risorsa non disponibile";
+      break;
+      default:
+        response = "codice di errore: " + String(httpResponseCode);
+      break;
+    }
+    http.end();
+    server.send(200, "text/html", response);
+  }
+  http.end();
+  server.send(200, "text/html", "response < 0");
 }
 
 void handleHome(){
@@ -105,9 +128,9 @@ String addToDB(String url, String nome, String cognome, String ruolo){
         response = "codice di errore: " + String(httpResponseCode);
       break;
     }
-  http.end();
-  Serial.println(response);
-  return response;
+    http.end();
+    Serial.println(response);
+    return response;
   }
   
   http.end();
