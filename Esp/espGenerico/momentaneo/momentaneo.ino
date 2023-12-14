@@ -1,15 +1,12 @@
-#ifdef ESP32
-    #include <WiFi.h>
-    #include <WebServer.h>
-#else
-    #include <ESP8266WiFi.h>
-    #include <ESP8266WebServer.h>
-#endif
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266HTTPClient.h>
+#include <WifiClient.h>
 
 const char* ssid     = "";
 const char* password = "";
 
-String urlDB = "http://0.0.0.0/tessera/";
+String urlDB = "http://0.0.0.0/macAddress";
 WiFiClient wifiClient;
 byte mac[6];
 String macAddress = "";
@@ -17,6 +14,8 @@ String macAddress = "";
 void setup() {
   Serial.begin(9600);
   connessione();
+
+  WiFi.macAddress(mac);
   for(int i = 0; i < 5; ++i) {
     macAddress += mac[i];
     macAddress += ":";
@@ -49,5 +48,13 @@ void connessione() {
 
 void sendMacAddress() {
   HTTPClient http;
-  String url
+  http.begin(wifiClient, urlDB);
+
+  http.addHeader("Content-Type", "text/plain");
+  int httpResponseCode = http.POST(macAddress);
+
+  Serial.print("Codice di risposta");
+  Serial.println(httpResponseCode);
+
+  http.end();
 }
