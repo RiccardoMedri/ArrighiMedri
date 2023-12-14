@@ -106,29 +106,14 @@ void handleHome(){
 void handleAccess() {
   String limit = server.arg("number");
 
-  HTTPClient http;
+  // scansione del tag nfc
 
-  http.begin(wifiClient, (urlAccess + "000" + "-" + limit + macAddress).c_str());
-  int httpResponseCode = http.GET();
+  String uidCard = "000"; // il valore verrà preso dalla scansione dell'NFC
+  String fullUrl = urlAccess + /*UID CARD*/ uidCard + limit + macAddress;
 
-  if (httpResponseCode > 0) {
-    String response;
-    switch (httpResponseCode){
-      case 200:
-        response = http.getString();
-      break;
-      case 404:
-        response = "risorsa non disponibile";
-      break;
-      default:
-        response = "codice di errore: " + String(httpResponseCode);
-      break;
-    }
-    http.end();
-    server.send(200, "text/html", response);
-  }
-  http.end();
-  server.send(200, "text/html", "response < 0");
+  String sendResult = httpRequest(fullUrl);
+
+  server.send(200, "text/html", sendResult);
 }
 
 void handleAddCard() {
@@ -136,79 +121,54 @@ void handleAddCard() {
   String cognome = server.arg("cognome");
   String ruolo = server.arg("ruolo");
 
+  // scansione del tag nfc
+
+  String uidCard = "000";
+
+  String fullUrl = urlAddCard + "-" + uidCard + "-" + nome + "-" + cognome + "-" + ruolo + "-" + macAddress;
+  String sendResult = httpRequest(fullUrl);
+
   if(nome != "" && cognome != "" && ruolo != ""){
-    server.send(200, "text.html", addToDB(urlAddCard, nome, cognome, ruolo));
+    server.send(200, "text.html", sendResult);
   }else{
     server.send(200, "text/html", "Form non compilato");
   }
 }
 
 void handleDeleteCard() {
-  server.send(200, "text/html", removeFromDB(urlDeleteCard /*UID carta*/));
+  // scansione del tag nfc
+
+  String uidCard = "000";
+  String fullUrl = urlDeleteCard + uidCard + "-" + macAddress;
+  String sendResult = httpRequest(fullUrl);
+
+  server.send(200, "text/html", sendResult);
 }
 
-String addToDB(String url, String nome, String cognome, String ruolo){
-
-  // scansione del nfc e recupero idtessera
-
+String httpRequest(String fullUrl) {
   HTTPClient http;
-  String urlCompleto = urlAddCard + /*UID tessera*/ + "-" + nome + "-" + cognome + "-" + ruolo + "-" + macAddress;
-  http.begin(wifiClient, urlCompleto.c_str());
-  
+
+  http.begin(wifiClient, fullUrl.c_str());
+
   int httpResponseCode = http.GET();
 
-  if (httpResponseCode > 0) {
+  if(httpResponseCode > 0) {
     String response = "";
-    switch (httpResponseCode){
+    switch (httpResponseCode) {
       case 200:
         response = http.getString();
-      break;
+        break;
       case 404:
         response = "risorsa non disponibile";
-      break;
       default:
         response = "codice di errore: " + String(httpResponseCode);
-      break;
+        break;
+      
+      http.end();
+      return response;
     }
-  http.end();
-  Serial.println(response);
-  return response;
   }
-  
+
   http.end();
-  
-  return "Response code < 0";
-}
-
-String removeFromDB (String urlDeleteCard /*UID carta*/) {
-  
-  //scansione carta 
-
-  HTTPClient http;
-  String urlCompleto = urlDeleteCard + /*UID carta*/ + "-" + macAddress;
-  http.begin(wifiClient, urlCompleto.c_str());
-  
-  int httpResponseCode = http.GET();
-
-  if (httpResponseCode > 0) {
-    String response = "";
-    switch (httpResponseCode){
-      case 200:
-        response = http.getString();
-      break;
-      case 404:
-        response = "risorsa non disponibile";
-      break;
-      default:
-        response = "codice di errore: " + String(httpResponseCode);
-      break;
-    }
-    http.end();
-    Serial.println(response);
-    return response;
-  }
-  
-  http.end();
-  
   return "Response code < 0";
 }
