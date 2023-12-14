@@ -6,18 +6,22 @@
 
 const char* ssid = "";
 const char* password = "";
-const String macAddress;
 
-String urlDB = "http://0.0.0.0/tessera";
-
+String urlDB = "http://0.0.0.0/tessera/";
 WiFiClient wifiClient;
+byte mac[6];
+String macAddress = "";
 
 void setup() {
-    Serial.begin(9600);
-    // pinMode(PIN_LED_RED, OUTPUT);
-    // pinMode(PIN_LED_GREEN, OUTPUT);
-    connessione();
-    macAddress = WiFi.macAddress();
+  Serial.begin(9600);
+  // pinMode(PIN_LED_RED, OUTPUT);
+  // pinMode(PIN_LED_GREEN, OUTPUT);
+  connessione();
+  for(int i = 0; i < 5; ++i) {
+    macAddress += mac[i];
+    macAddress += ":";
+  }
+  macAddress += mac[5];
 }
 
 void loop() {
@@ -59,7 +63,7 @@ void connessione() {
 
 bool checkID(String idTessera, String url) {
     HTTPClient http;
-    String urlCompleto = url + "/" + idTessera + "-" + macAddress;
+    String urlCompleto = url + idTessera + "-" + macAddress;
     http.begin(wifiClient, urlCompleto.c_str());
 
     int httpResponseCode = http.GET();
