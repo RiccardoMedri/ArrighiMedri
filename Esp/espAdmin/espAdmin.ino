@@ -149,7 +149,7 @@ void handleDeleteCard() {
 
 String addToDB(String url, String nome, String cognome, String ruolo){
 
-  // scansione del nfc e recupero idtessera
+  // scansione carta
 
   HTTPClient http;
   String urlCompleto = urlAddCard + /*UID tessera*/ + "-" + nome + "-" + cognome + "-" + ruolo + "-" + macAddress;

@@ -2,16 +2,14 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const home = require('./routes/router-home.js');
-const tessere = require('./routes/router-tessere.js');
-const newCard = require('./routes/router-addNewCard.js');
-const acces = require('./routes/router-limitAcces.js');
+const card = require('./routes/router-card.js');
+const MacAddress = require('./routes/router-MacAddress.js');
 
 app.use(express.static('public'));
 
 app.use(home);
-app.use(tessere);
-app.use(newCard);
-app.use(acces);
+app.use(card);
+app.use(MacAddress);
 
 app.use(function(req,res,next){
     res.setHeader('Content-Type', 'text/plain');
