@@ -2,8 +2,8 @@ const connection = require("../utils/db");
 
 module.exports.limitAcces = async function(req, res) {
     connection.execute(
-        `INSERT INTO Tessere(limite) VALUES(?)`,
-        [req.params.limit],
+        `UPDATE tessere SET limite = ? WHERE idtessera = ?`,
+        [req.params.limit, req.params.idtessera],
         function(err, results, fields) {
             res.setHeader('Content-Type', 'text/plain');
             if(!err) {

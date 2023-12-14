@@ -3,7 +3,6 @@ const acces = require('../controller/controller-limitAccess');
 
 const router = express.Router();
 
-router.get('/tessera/limitaAccessi/:limit', acces.limitAcces);
-router.get('/prova', acces.prova);
+router.get('/tessera/limitaAccessi/:idtessera-:limit', acces.limitAcces);
 
 module.exports=router;

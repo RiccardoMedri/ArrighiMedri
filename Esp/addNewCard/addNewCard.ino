@@ -1,29 +1,52 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
-
 #include <ESP8266HTTPClient.h>
 #include <WifiClient.h>
 
-const char* ssid     = "";
-const char* password = "";
+const char* ssid     = "Vodafone-A81417726";
+const char* password = "vwwcb2b99xd8983";
 
 const char index_html[] PROGMEM = R"rawliteral(
     <!DOCTYPE HTML><html><head>
     <title>ESP Input Form</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     </head><body>
-    <form action="/addCard">
-        Nome: <input type="text" name="nome">
-        Cognome: <input type="text" name="cognome">
-        Ruolo: <input type="text" name="ruolo">
-        <input type="submit" value="Submit">
-    </form><br>
-    </body></html>)rawliteral";
+        <ul style = "list-style-type: none;">
+            <li>
+                <p>Inserire i dati per una nuova tessera</p>
+                <form action="/addCard">
+                    Nome: <input type="text" name="nome">
+                    Cognome: <input type="text" name="cognome">
+                    Ruolo: <input type="text" name="ruolo">
+                    <input type="submit" value="Submit">
+                </form>
+            </li>
+            <li style = "padding-top: 3%;">
+                <p>Limitare il numero di accessi</p>
+                <form action="/limitAccess">
+                    <select name = "number" id = "number">
+                    </select>
+                    <input type="submit" value="Submit">
+                </form>
+            </li>
+        </ul>
+    <br>
+    </body>
+    <script>
+        let res = "";
+        for(let i = 0; i < 101; ++i) {
+            res += "<option>" + i + "</option>";
+        }
+        document.getElementById("number").innerHTML = res;
+    </script>
+</html>)rawliteral";
 
 ESP8266WebServer server(80);
 WiFiClient wifiClient;
-String urlDB = "http://0.0.0.0/tessera/nuovaTessera";
-const String macAddress;
+String urlDB = "http://192.168.1.9:3000/tessera/nuovaTessera";
+String urlAccess = "http://192.168.1.9:3000/tessera/limitaAccessi/";
+byte mac[6];
+String macAddress = "";
 
 void setup() {
   delay(6000);
@@ -31,7 +54,13 @@ void setup() {
   delay(10);
   connessione();
   setupRouting();
-  macAddress = WiFi.macAddress();
+  WiFi.macAddress(mac);
+
+  for(int i = 0; i < 5; ++i) {
+      macAddress += mac[i];
+      macAddress += ":";
+  }
+  macAddress += mac[5];
 }
 
 void loop() {
@@ -63,10 +92,11 @@ void setupRouting() {
 }
 
 void handleAccess() {
-  int limit = server.arg("number");
+  String limit = server.arg("number");
+
   HTTPClient http;
 
-  http.begin(wifiClient, .c_str());
+  http.begin(wifiClient, (urlAccess + "000" + "-" + limit).c_str());
   int httpResponseCode = http.GET();
 
   if (httpResponseCode > 0) {
