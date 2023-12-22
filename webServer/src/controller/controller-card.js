@@ -168,3 +168,14 @@ module.exports.deleteCard = async function(req, res) {
         }
     )
 }
+
+module.exports.getData = function(req, res) {
+    connection.execute(
+        `SELECT i.data, i.orario FROM ingressi i JOIN tessere t ON i.idtessera = t.idtessera WHERE t.nome = ? AND t.cognome = ?`,
+        [req.params.nome, req.params.cognome],
+        function(err, results, fields) {
+            res.json(results);
+        }
+    )
+}
+

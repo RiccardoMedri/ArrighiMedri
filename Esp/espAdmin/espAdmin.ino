@@ -38,6 +38,14 @@ const char index_html[] PROGMEM = R"rawliteral(
                     <input type="submit" value="Submit">
                 </form>
             </li>
+            <li style = "padding-top: 3%;">
+              <p>Visualizzare le timbrature di una tessera</p>
+              <form action="/getData">
+                  Nome: <input type="text" name="nome">
+                  Cognome: <input type="text" name="cognome">
+                  <input type="submit" value="Submit">
+              </form>
+            </li>
         </ul>
     <br>
     </body>
@@ -54,8 +62,9 @@ ESP8266WebServer server(80);
 WiFiClient wifiClient;
 String urlAddCard = "http://192.168.68.238:3000/tessera/nuovaTessera/";
 String urlAccess = "http://192.168.68.238:3000/tessera/limitaAccessi/";
-String urlDeleteCard ="http://192.168.68.238:3000/tessera/deleteCard/";
+String urlDeleteCard = "http://192.168.68.238:3000/tessera/deleteCard/";
 String urlAddMacAddress = "http://192.168.68.238:3000/macAddress/nuovoMacAddress/";
+String urlGetData = "http://192.168.68.238:3000/timbrature/";
 byte mac[6];
 String macAddress = "";
 
@@ -102,6 +111,7 @@ void setupRouting() {
     server.on("/limitAccess", handleAccess);
     server.on("/deleteCard", handleDeleteCard);
     server.on("/macAddress", handleMacAddress);
+    server.on("/getData", handleData);
     server.begin();
 }
 
@@ -161,6 +171,18 @@ void handleMacAddress() {
   String sendResult = httpRequest(fullUrl);
   
   server.send(200, "text/html", sendResult);
+}
+
+void handleData() {
+  String nome = server.arg("nome");
+  String cognome = server.arg("cognome");
+  String fullUrl = urlGetData + nome + "-" + cognome;
+
+  String result = httpRequest(fullUrl);
+  String script = "<script> let arr = " + result + "; let result = ''; for(let i = 0; i < arr.length; ++i) { result += '<tr>' + '<td>' + arr[i]['data'] + '</td>' + '<td>' + arr[i]['orario'] + '</td>' + '</tr>'} document.getElementById('data').innerHTML += result; </script>";
+  String index = "<p>Visualizzare le timbrature di una tessera</p> <form action='/getData'> Nome: <input type='text' name='nome'> Cognome: <input type='text' name='cognome'> <input type='submit' value='Submit'></form> <table style = 'padding-top: 3%;' id = 'data'><dr><th>Data</th><th>Orario</th></dr></table>" + script;
+
+  server.send(200, "text/html", index);
 }
 
 String httpRequest(String fullUrl) {

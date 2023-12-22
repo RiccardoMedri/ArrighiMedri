@@ -1,7 +1,13 @@
 <!DOCTYPE HTML><html><head>
     <title>ESP Input Form</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head><body>
+    </head>
+    <style>
+        table, th, td {
+          border:1px solid black;
+        }
+        </style>
+        <body>
         <ul style = "list-style-type: none;">
             <li>
                 <p>Inserire i dati per una nuova tessera</p>
@@ -20,9 +26,41 @@
                     <input type="submit" value="Submit">
                 </form>
             </li>
+            <li style = "padding-top: 3%;">
+                <p>Cancellare una tessera</p>
+                <form action="/deleteCard">
+                    <input type="submit" value="Submit">
+                </form>
+            </li>
+            <li style = "padding-top: 3%;">
+              <p>Visualizzare le timbrature di una tessera</p>
+              <form action="/viweData">
+                  Nome: <input type="text" name="nome">
+                  Cognome: <input type="text" name="cognome">
+                  <input type="submit" value="Submit">
+              </form>
+            </li>
         </ul>
     <br>
+
+
+
+    <section>
+        <table id = "prova">
+            <tr>
+                <th>Data</th>
+                <th>Ora</th>
+            </tr> 
+        </table>
+    </section>
+
+
+
     </body>
+
+<script> let arr = [1, 2, 3]; let result = ''; for(let i = 0; i < 3; ++i) { result += '<tr>' + '<td>' + arr[i]['nome'] + '</td>' + '<td>' + arr[i]['cognome'] + '</td>' + '</tr>'} document.getElementById('prova').innerHTML += result; </script>
+
+
     <script>
         let res = "";
         for(let i = 0; i < 101; ++i) {
