@@ -77,7 +77,7 @@ module.exports.addNewCard = async function(req, res) {
         [req.params.mac],
         function(err, results, fields) {
 
-            if (results.length > 0 && results[0]['mac'] == 'C8:5B:76:FA:11:68') {
+            if (results.length > 0 && results[0]['mac'] == req.params.mac) {
                 connection.execute(
                     'SELECT idtessera FROM tessere WHERE idtessera = ?',
                     [req.params.id],
@@ -112,7 +112,7 @@ module.exports.limitAcces = async function(req, res) {
         [req.params.mac],
         function(err, results, fields) {
             
-            if (results.length > 0 && results[0]['mac'] == 'C8:5B:76:FA:11:68') {
+            if (results.length > 0 && results[0]['mac'] == req.params.mac) {
                 connection.execute(
                     `UPDATE tessere SET limite = ? WHERE idtessera = ?`,
                     [req.params.limit, req.params.idtessera],
@@ -141,7 +141,7 @@ module.exports.deleteCard = async function(req, res) {
         [req.params.mac],
         function(err, results, fields) {
 
-            if (results.length > 0 && results[0]['mac'] == 'C8:5B:76:FA:11:68') {         //se c'è macaddress cerca la tessera a db
+            if (results.length > 0 && results[0]['mac'] == req.params.mac) {         //se c'è macaddress cerca la tessera a db
                 connection.execute(
                     'SELECT idtessera FROM tessere WHERE idtessera = ?',
                     [req.params.id],

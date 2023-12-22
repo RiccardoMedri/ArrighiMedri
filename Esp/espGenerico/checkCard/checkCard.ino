@@ -1,8 +1,8 @@
 #include <ESP8266HTTPClient.h>
 #include <WifiClient.h>
 
-// #define PIN_LED_RED 9
-// #define PIN_LED_GREEN 8
+// #define RED_LED 9
+// #define GREEN_LED 8
 
 const char* ssid = "";
 const char* password = "";
@@ -14,8 +14,8 @@ String macAddress = "";
 
 void setup() {
   Serial.begin(9600);
-  // pinMode(PIN_LED_RED, OUTPUT);
-  // pinMode(PIN_LED_GREEN, OUTPUT);
+  // pinMode(RED_LED, OUTPUT);
+  // pinMode(GREEN_LED, OUTPUT);
   connessione();
   for(int i = 0; i < 5; ++i) {
     macAddress += mac[i];
@@ -28,16 +28,16 @@ void loop() {
     if(/*lettura della tessare*/) {
         String idTessera = ""; // = metodo per prendere il valore scansionato
         if(checkID(idTessera, urlDB)) {
-            // digitalWrite(PIN_LED_GREEN, HIHG);
+            // digitalWrite(GREEN_LED, HIHG);
             // delay(2000);
-            // digitalWrite(PIN_LED_GREEN, LOW);
+            // digitalWrite(GREEN_LED, LOW);
             // simulazione led con stampa a seriale
             Serial.println("GREEN LED IS BLINKING!");
         }
         else {
-            // digitalWrite(PIN_LED_RED, HIHG);
+            // digitalWrite(RED_LED, HIHG);
             // delay(2000);
-            // digitalWrite(PIN_LED_GREEN, LOW);
+            // digitalWrite(GREEN_LED, LOW);
             // simulazione led con stampa a seriale
             Serial.println("RED LED IS BLINKING");
         }

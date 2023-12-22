@@ -3,8 +3,11 @@
 #include <ESP8266HTTPClient.h>
 #include <WifiClient.h>
 
-const char* ssid     = "Vodafone-A81417726";
-const char* password = "vwwcb2b99xd8983";
+// #define GREEN_LED 8
+// #define RED_LED 9
+
+const char* ssid     = "AndroidAPc5c2";
+const char* password = "routerpw";
 
 const char index_html[] PROGMEM = R"rawliteral(
     <!DOCTYPE HTML><html><head>
@@ -49,16 +52,17 @@ const char index_html[] PROGMEM = R"rawliteral(
 
 ESP8266WebServer server(80);
 WiFiClient wifiClient;
-String urlAddCard = "http://192.168.1.9:3000/tessera/nuovaTessera/";
-String urlAccess = "http://192.168.1.9:3000/tessera/limitaAccessi/";
-String urlDeleteCard ="http://192.168.1.9:3000/tessera/deleteCard/";
-String urlAddMacAddress = "http://192.168.1.9:3000/macAddress/nuovoMacAddress/";
+String urlAddCard = "http://192.168.68.238:3000/tessera/nuovaTessera/";
+String urlAccess = "http://192.168.68.238:3000/tessera/limitaAccessi/";
+String urlDeleteCard ="http://192.168.68.238:3000/tessera/deleteCard/";
+String urlAddMacAddress = "http://192.168.68.238:3000/macAddress/nuovoMacAddress/";
 byte mac[6];
 String macAddress = "";
 
 void setup() {
-  delay(6000);
   Serial.begin(115200);
+  // pinMode(GREEN_LED, OUTPUT);
+  // pinMode(RED_LED, OUTPUT);
   delay(10);
   connessione();
   setupRouting();
@@ -108,10 +112,12 @@ void handleHome(){
 void handleAccess() {
   String limit = server.arg("number");
 
+  // Serial.digitalWrite(GREEN_LED, HIGH);
   // scansione del tag nfc
+  // Serial.digitalWrite(GREEN_LED, LOW);
 
-  String uidCard = "000"; // il valore verrà preso dalla scansione dell'NFC
-  String fullUrl = urlAccess + /*UID CARD*/ uidCard + limit + macAddress;
+  String uidCard = "500"; // il valore verrà preso dalla scansione dell'NFC
+  String fullUrl = urlAccess + /*UID CARD*/ uidCard + "-" + limit + "-" + macAddress;
 
   String sendResult = httpRequest(fullUrl);
 
@@ -125,9 +131,9 @@ void handleAddCard() {
 
   // scansione del tag nfc
 
-  String uidCard = "000";
+  String uidCard = "500";
 
-  String fullUrl = urlAddCard + "-" + uidCard + "-" + nome + "-" + cognome + "-" + ruolo + "-" + macAddress;
+  String fullUrl = urlAddCard + uidCard + "-" + nome + "-" + cognome + "-" + ruolo + "-" + macAddress;
   String sendResult = httpRequest(fullUrl);
 
   server.send(200, "text.html", sendResult);
@@ -136,7 +142,7 @@ void handleAddCard() {
 void handleDeleteCard() {
   // scansione del tag nfc
 
-  String uidCard = "000";
+  String uidCard = "500";
   String fullUrl = urlDeleteCard + uidCard + "-" + macAddress;
   String sendResult = httpRequest(fullUrl);
 
@@ -159,9 +165,7 @@ void handleMacAddress() {
 
 String httpRequest(String fullUrl) {
   HTTPClient http;
-
   http.begin(wifiClient, fullUrl.c_str());
-
   int httpResponseCode = http.GET();
 
   if(httpResponseCode > 0) {
@@ -172,13 +176,14 @@ String httpRequest(String fullUrl) {
         break;
       case 404:
         response = "risorsa non disponibile";
+        break;
       default:
         response = "codice di errore: " + String(httpResponseCode);
         break;
-      
-      http.end();
-      return response;
     }
+
+    http.end();
+    return response;
   }
 
   http.end();
