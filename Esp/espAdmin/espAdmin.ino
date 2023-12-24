@@ -18,8 +18,8 @@ const char index_html[] PROGMEM = R"rawliteral(
             <li>
                 <p>Inserire i dati per una nuova tessera</p>
                 <form action="/addCard">
-                    Nome: <input type="text" name="nome">
-                    Cognome: <input type="text" name="cognome">
+                    Nome: <input type="text" name="name">
+                    Cognome: <input type="text" name="surname">
                     Ruolo: <input type="text" name="ruolo">
                     <input type="submit" value="Submit">
                 </form>
@@ -41,8 +41,8 @@ const char index_html[] PROGMEM = R"rawliteral(
             <li style = "padding-top: 3%;">
               <p>Visualizzare le timbrature di una tessera</p>
               <form action="/getData">
-                  Nome: <input type="text" name="nome">
-                  Cognome: <input type="text" name="cognome">
+                  Nome: <input type="text" name="name">
+                  Cognome: <input type="text" name="surname">
                   <input type="submit" value="Submit">
               </form>
             </li>
@@ -73,7 +73,7 @@ void setup() {
   // pinMode(GREEN_LED, OUTPUT);
   // pinMode(RED_LED, OUTPUT);
   delay(10);
-  connessione();
+  setupConnection();
   setupRouting();
   WiFi.macAddress(mac);
 
@@ -88,7 +88,7 @@ void loop() {
   server.handleClient();
 }
 
-void connessione() {
+void setupConnection() {
   Serial.print("Connecting to ");
   Serial.println(ssid);
 
@@ -135,15 +135,15 @@ void handleAccess() {
 }
 
 void handleAddCard() {
-  String nome = server.arg("nome");
-  String cognome = server.arg("cognome");
+  String name = server.arg("name");
+  String surname = server.arg("surname");
   String ruolo = server.arg("ruolo");
 
   // scansione del tag nfc
 
   String uidCard = "500";
 
-  String fullUrl = urlAddCard + uidCard + "-" + nome + "-" + cognome + "-" + ruolo + "-" + macAddress;
+  String fullUrl = urlAddCard + uidCard + "-" + name + "-" + surname + "-" + ruolo + "-" + macAddress;
   String sendResult = httpRequest(fullUrl);
 
   server.send(200, "text.html", sendResult);
@@ -160,7 +160,7 @@ void handleDeleteCard() {
 }
 
 void handleMacAddress() {
-  if (server.hasArg("plain")== false){
+  if (server.hasArg("plain") == false){
  
     server.send(200, "text/plain", "Body non ricevuto");
     return;
@@ -174,13 +174,13 @@ void handleMacAddress() {
 }
 
 void handleData() {
-  String nome = server.arg("nome");
-  String cognome = server.arg("cognome");
-  String fullUrl = urlGetData + nome + "-" + cognome;
+  String name = server.arg("name");
+  String surname = server.arg("surname");
+  String fullUrl = urlGetData + name + "-" + surname;
 
   String result = httpRequest(fullUrl);
   String script = "<script> let arr = " + result + "; let result = ''; for(let i = 0; i < arr.length; ++i) { result += '<tr>' + '<td>' + arr[i]['data'] + '</td>' + '<td>' + arr[i]['orario'] + '</td>' + '</tr>'} document.getElementById('data').innerHTML += result; </script>";
-  String index = "<p>Visualizzare le timbrature di una tessera</p> <form action='/getData'> Nome: <input type='text' name='nome'> Cognome: <input type='text' name='cognome'> <input type='submit' value='Submit'></form> <table style = 'padding-top: 3%;' id = 'data'><dr><th>Data</th><th>Orario</th></dr></table>" + script;
+  String index = "<p>Visualizzare le timbrature di una tessera</p> <form action='/getData'> Nome: <input type='text' name='name'> Cognome: <input type='text' name='surname'> <input type='submit' value='Submit'></form> <table style = 'padding-top: 3%;' id = 'data'><dr><th>Data</th><th>Orario</th></dr></table>" + script;
 
   server.send(200, "text/html", index);
 }

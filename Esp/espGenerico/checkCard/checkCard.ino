@@ -16,7 +16,7 @@ void setup() {
   Serial.begin(9600);
   // pinMode(RED_LED, OUTPUT);
   // pinMode(GREEN_LED, OUTPUT);
-  connessione();
+  setupConnection();
   for(int i = 0; i < 5; ++i) {
     macAddress += mac[i];
     macAddress += ":";
@@ -26,8 +26,8 @@ void setup() {
 
 void loop() {
     if(/*lettura della tessare*/) {
-        String idTessera = ""; // = metodo per prendere il valore scansionato
-        if(checkID(idTessera, urlDB)) {
+        String idCard = ""; // = metodo per prendere il valore scansionato
+        if(checkID(idCard, urlDB)) {
             // digitalWrite(GREEN_LED, HIHG);
             // delay(2000);
             // digitalWrite(GREEN_LED, LOW);
@@ -44,7 +44,7 @@ void loop() {
     }
 }
 
-void connessione() {
+void setupConnection() {
     Serial.print("Connecting to ");
     Serial.println(ssid);
 
@@ -61,10 +61,10 @@ void connessione() {
     Serial.println(WiFi.localIP());
 }
 
-bool checkID(String idTessera, String url) {
+bool checkID(String idCard, String url) {
     HTTPClient http;
-    String urlCompleto = url + idTessera + "-" + macAddress;
-    http.begin(wifiClient, urlCompleto.c_str());
+    String urlFull = url + idCard + "-" + macAddress;
+    http.begin(wifiClient, urlFull.c_str());
 
     int httpResponseCode = http.GET();
 
