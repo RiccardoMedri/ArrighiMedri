@@ -1,9 +1,9 @@
 const express = require('express');
-const MacAddress = require('../controller/controller-MacAddress');
+const macAddress = require('../controller/controller-MacAddress');
 
 const router = express.Router();
 
-router.get('/macAddress/nuovoMacAddress/:mac-:macAddress', MacAddress.addMacAddress);
-router.get('/macAddress/deleteMacAddress/:mac-:macAddress', MacAddress.removeMacAddress);
+router.get('/macAddress/nuovoMacAddress/:macAddress', macAddress.addMacAddress);
+router.get('/macAddress/deleteMacAddress/:mac-:macAddress', macAddress.removeMacAddress);
 
 module.exports=router;

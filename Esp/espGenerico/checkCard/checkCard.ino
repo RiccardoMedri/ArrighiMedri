@@ -1,64 +1,30 @@
 #include <ESP8266HTTPClient.h>
 #include <WifiClient.h>
+#include <setupConnection.h>
 
 // #define RED_LED 9
 // #define GREEN_LED 8
 
-const char* ssid = "";
-const char* password = "";
+const char* ssid     = "AndroidAPc5c2";
+const char* password = "routerpw";
 
-String urlDB = "http://0.0.0.0/tessera/";
+String urlDB = "http://192.168.68.238:3000/tessera/";
 WiFiClient wifiClient;
-byte mac[6];
-String macAddress = "";
+String macAddress = WiFi.macAddress();
 
 void setup() {
   Serial.begin(9600);
   // pinMode(RED_LED, OUTPUT);
   // pinMode(GREEN_LED, OUTPUT);
-  setupConnection();
-  for(int i = 0; i < 5; ++i) {
-    macAddress += mac[i];
-    macAddress += ":";
-  }
-  macAddress += mac[5];
+  setupConnection(ssid, password);
 }
 
 void loop() {
-    if(/*lettura della tessare*/) {
-        String idCard = ""; // = metodo per prendere il valore scansionato
-        if(checkID(idCard, urlDB)) {
-            // digitalWrite(GREEN_LED, HIHG);
-            // delay(2000);
-            // digitalWrite(GREEN_LED, LOW);
-            // simulazione led con stampa a seriale
-            Serial.println("GREEN LED IS BLINKING!");
-        }
-        else {
-            // digitalWrite(RED_LED, HIHG);
-            // delay(2000);
-            // digitalWrite(GREEN_LED, LOW);
-            // simulazione led con stampa a seriale
-            Serial.println("RED LED IS BLINKING");
-        }
+    String idCard = readString(); // lettura tessera
+    
+    if(idCard != "") {
+        blinkLed(idCard);
     }
-}
-
-void setupConnection() {
-    Serial.print("Connecting to ");
-    Serial.println(ssid);
-
-    WiFi.begin(ssid, password);
-
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
-    }
-
-    Serial.println("");
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
-    Serial.println(WiFi.localIP());
 }
 
 bool checkID(String idCard, String url) {
@@ -75,4 +41,23 @@ bool checkID(String idCard, String url) {
 
     http.end();
     return false;
-} 
+}
+
+void blinkLed(String idCard) {
+    if(idCard) {
+        if(checkID(idCard, urlDB)) {
+            // digitalWrite(GREEN_LED, HIHG);
+            // delay(2000);
+            // digitalWrite(GREEN_LED, LOW);
+            // simulazione led con stampa a seriale
+            Serial.println("GREEN LED IS BLINKING!");
+        }
+        else {
+            // digitalWrite(RED_LED, HIHG);
+            // delay(2000);
+            // digitalWrite(GREEN_LED, LOW);
+            // simulazione led con stampa a seriale
+            Serial.println("RED LED IS BLINKING");
+        }
+    }
+}

@@ -5,23 +5,14 @@
 const char* ssid     = "AndroidAPc5c2";
 const char* password = "routerpw";
 
-String urlDB = "http://0.0.0.0/macAddress";
+String url = "http://192.168.68.238:3000/macAddress/nuovoMacAddress/";
 WiFiClient wifiClient;
-byte mac[6];
-String macAddress = "";
+String macAddress = WiFi.macAddress();
 
 void setup() {
   Serial.begin(9600);
   //setupConnection();
   setupConnection(ssid, password);
-
-
-  WiFi.macAddress(mac);
-  for(int i = 0; i < 5; ++i) {
-    macAddress += mac[i];
-    macAddress += ":";
-  }
-  macAddress += mac[5];
 
   sendMacAddress();
 }
@@ -29,33 +20,16 @@ void setup() {
 void loop() {
 
 }
-/*
-void setupConnection() {
-    Serial.print("Connecting to ");
-    Serial.println(ssid);
-
-    WiFi.begin(ssid, password);
-
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
-    }
-
-    Serial.println("");
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
-    Serial.println(WiFi.localIP());
-}
-*/
 
 void sendMacAddress() {
   HTTPClient http;
-  http.begin(wifiClient, urlDB);
+  String urlFull = url + macAddress; 
+  http.begin(wifiClient, urlFull.c_str());
 
   http.addHeader("Content-Type", "text/plain");
-  int httpResponseCode = http.POST(macAddress);
+  int httpResponseCode = http.GET();
 
-  Serial.print("Codice di risposta");
+  Serial.print("Codice di risposta ");
   Serial.println(httpResponseCode);
 
   http.end();

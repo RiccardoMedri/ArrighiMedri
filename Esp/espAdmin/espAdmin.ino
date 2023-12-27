@@ -2,6 +2,7 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
 #include <WifiClient.h>
+#include <setupConnection.h>
 
 // #define GREEN_LED 8
 // #define RED_LED 9
@@ -65,44 +66,19 @@ String urlAccess = "http://192.168.68.238:3000/tessera/limitaAccessi/";
 String urlDeleteCard = "http://192.168.68.238:3000/tessera/deleteCard/";
 String urlAddMacAddress = "http://192.168.68.238:3000/macAddress/nuovoMacAddress/";
 String urlGetData = "http://192.168.68.238:3000/timbrature/";
-byte mac[6];
-String macAddress = "";
+String macAddress = WiFi.macAddress();
 
 void setup() {
   Serial.begin(115200);
   // pinMode(GREEN_LED, OUTPUT);
   // pinMode(RED_LED, OUTPUT);
   delay(10);
-  setupConnection();
+  setupConnection(ssid, password);
   setupRouting();
-  WiFi.macAddress(mac);
-
-  for(int i = 0; i < 5; ++i) {
-      macAddress += mac[i];
-      macAddress += ":";
-  }
-  macAddress += mac[5];
 }
 
 void loop() {
   server.handleClient();
-}
-
-void setupConnection() {
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
-
-  WiFi.begin(ssid, password);
-
-  while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.print(".");
-  }
-
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
 }
 
 void setupRouting() {
@@ -125,9 +101,13 @@ void handleAccess() {
   // Serial.digitalWrite(GREEN_LED, HIGH);
   // scansione del tag nfc
   // Serial.digitalWrite(GREEN_LED, LOW);
+  Serial.println("GREEN LED IS ON");
 
-  String uidCard = "500"; // il valore verrà preso dalla scansione dell'NFC
-  String fullUrl = urlAccess + /*UID CARD*/ uidCard + "-" + limit + "-" + macAddress;
+  String uidCard = readString(); // il valore preso dalla scansione dell'NFC
+
+  Serial.println("GREEN LED IS OFF");
+
+  String fullUrl = urlAccess + uidCard + "-" + limit + "-" + macAddress;
 
   String sendResult = httpRequest(fullUrl);
 
@@ -140,8 +120,12 @@ void handleAddCard() {
   String ruolo = server.arg("ruolo");
 
   // scansione del tag nfc
+  
+  Serial.println("GREEN LED IS ON");
 
-  String uidCard = "500";
+  String uidCard = readString(); // il valore preso dalla scansione dell'NFC
+
+  Serial.println("GREEN LED IS OFF");
 
   String fullUrl = urlAddCard + uidCard + "-" + name + "-" + surname + "-" + ruolo + "-" + macAddress;
   String sendResult = httpRequest(fullUrl);
@@ -152,7 +136,12 @@ void handleAddCard() {
 void handleDeleteCard() {
   // scansione del tag nfc
 
-  String uidCard = "500";
+  Serial.println("GREEN LED IS ON");
+
+  String uidCard = readString(); // il valore preso dalla scansione dell'NFC
+
+  Serial.println("GREEN LED IS OFF");
+
   String fullUrl = urlDeleteCard + uidCard + "-" + macAddress;
   String sendResult = httpRequest(fullUrl);
 
@@ -210,4 +199,22 @@ String httpRequest(String fullUrl) {
 
   http.end();
   return "Response code < 0";
+}
+
+String readString() {
+  String str = "";
+  String result = "";
+
+  while (str == "") {
+    str = Serial.readString();
+  }
+  
+
+  if(str != "") {
+    for(int i = 0; i < str.length() - 1; ++i) {
+      result += str[i];
+    }
+  }
+
+  return result;
 }
