@@ -22,7 +22,7 @@ module.exports.removeMacAddress = async function(req, res) {
         [req.params.mac],
         function(err, results, fields) {
             
-            if (results.length > 0 && results[0]['mac'] == 'C8:5B:76:FA:11:68') {
+            if (results.length > 0 && results[0]['mac'] == req.params.mac) {
                 connection.execute(
                     `DELETE FROM IndirizziMAC WHERE mac=?`,
                     [req.params.macAddress],

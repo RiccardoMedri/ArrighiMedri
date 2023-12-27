@@ -165,7 +165,7 @@ void handleMacAddress() {
 void handleData() {
   String name = server.arg("name");
   String surname = server.arg("surname");
-  String fullUrl = urlGetData + name + "-" + surname;
+  String fullUrl = urlGetData + name + "-" + surname + "-" + macAddress;
 
   String result = httpRequest(fullUrl);
   String script = "<script> let arr = " + result + "; let result = ''; for(let i = 0; i < arr.length; ++i) { result += '<tr>' + '<td>' + arr[i]['data'] + '</td>' + '<td>' + arr[i]['orario'] + '</td>' + '</tr>'} document.getElementById('data').innerHTML += result; </script>";

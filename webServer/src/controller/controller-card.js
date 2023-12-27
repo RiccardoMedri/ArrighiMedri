@@ -13,21 +13,22 @@ module.exports.checkCard = async function(req, res){
                         if (results.length > 0 && results[0]['idtessera'] == req.params.id) {
                             dataNow = new Date().toISOString().slice(0, 10);
                             connection.execute( // se l'idtessera esiste faccio partire la connessione al db
-                            // per verificare se il numero massimo di timbrature è stato raggiunto
+                            // per verificare se il numero massimo di timbrature giornaliere è stato raggiunto
                                 `SELECT data FROM ingressi WHERE data = (SELECT MAX(data) FROM ingressi) AND idtessera = ${req.params.id} ORDER BY data DESC`,
                                 // faccio una query innestata: nella query interna chiedo la data più recente
                                 // nella query esterna prendo tutte le date relative all'idtessera e all'ultima data
                                 [],
                                 function(err, resData, fields) {
-                                    check = false;
+                                    check = true;
                                     if(resData.length > 0) { // se esistono delle timbrature
-                                        for(i = 0; i < dataNow.length; ++i) { // ciclo per verificare se oggi ha già effettuato timbrature
-                                            if(dataNow[i] == resData[0]['data'][i]) {
-                                                check = true; // l'ultima data a bd è precedente alla data di oggi
+                                        for(i = 0; i < dataNow.length && check; ++i) { // ciclo per verificare se oggi ha già effettuato timbrature
+                                            if(dataNow[i] != resData[0]['data'][i]) {
+                                                check = false; // confronto l'ultima data salvata a db con quella odierna
                                             }
-                                        }
+                                        } 
+                                        // check == false se oggi non c'è ancora stata una timbratura
                                         if(check) { // se oggi ci sono già state timbrature
-                                            countNBadge = 0
+                                            countNBadge = 0;
                                             for(; countNBadge < resData.length; ++countNBadge); // conto il numero di timbrature
 
                                             if(countNBadge < Number(results[0]['limite'])) { // se posso fare ancora timbrature
@@ -37,6 +38,10 @@ module.exports.checkCard = async function(req, res){
                                                 res.send("Numero massimo di timbrature raggiunto");
                                             }
                                         }
+                                    }
+                                    else {
+                                        check = false; // se non ci sono salvate timbrature sul db relative alla tessera inserita
+                                        // check == false così può inserire la timbratura a db
                                     }
                                     if(!check) {
                                         const data = new Date().toISOString().slice(0, 10);
@@ -170,12 +175,22 @@ module.exports.deleteCard = async function(req, res) {
 }
 
 module.exports.getData = function(req, res) {
-    console.log(req.params.nome);
     connection.execute(
-        `SELECT i.data, i.orario FROM ingressi i JOIN tessere t ON i.idtessera = t.idtessera WHERE t.nome = ? AND t.cognome = ?`,
-        [req.params.nome, req.params.cognome],
+        `SELECT mac from IndirizziMAC WHERE mac=?`,
+        [req.params.mac],
         function(err, results, fields) {
-            res.json(results);
+            if(results.length > 0 && results[0]['mac'] == req.params.mac) {
+                connection.execute(
+                    `SELECT i.data, i.orario FROM ingressi i JOIN tessere t ON i.idtessera = t.idtessera WHERE t.nome = ? AND t.cognome = ?`,
+                    [req.params.nome, req.params.cognome],
+                    function(err, results, fields) {
+                        res.json(results);
+                    }
+                )
+            }
+            else {
+                res.send("Mac address non riconosciuto");
+            }
         }
     )
 }
