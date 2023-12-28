@@ -20,11 +20,11 @@ void setup() {
 }
 
 void loop() {
-    String idCard = readString(); // lettura tessera
-    
-    if(idCard != "") {
-        blinkLed(idCard);
-    }
+  String idCard = readString(); // lettura tessera
+
+  if(idCard != "") {
+    blinkLed(idCard);
+  }
 }
 
 bool checkID(String idCard, String url) {
@@ -60,4 +60,19 @@ void blinkLed(String idCard) {
             Serial.println("RED LED IS BLINKING");
         }
     }
+}
+
+String readString() {
+  String str = "";
+  String result = "";
+  
+  str = Serial.readString();
+
+  if(str != "") {
+    for(int i = 0; i < str.length() - 1; ++i) {
+        result += str[i];
+    }
+  }
+
+  return result;
 }

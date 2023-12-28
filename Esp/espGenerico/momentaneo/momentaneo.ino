@@ -1,6 +1,5 @@
 #include <ESP8266HTTPClient.h>
 #include <setupConnection.h>
-// 84:cc:a8:ae:a0:12
 
 const char* ssid     = "AndroidAPc5c2";
 const char* password = "routerpw";
@@ -11,7 +10,6 @@ String macAddress = WiFi.macAddress();
 
 void setup() {
   Serial.begin(9600);
-  //setupConnection();
   setupConnection(ssid, password);
 
   sendMacAddress();

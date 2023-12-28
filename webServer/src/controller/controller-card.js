@@ -88,7 +88,7 @@ module.exports.addNewCard = async function(req, res) {
                     [req.params.id],
                     function(err, results, fields) {
 
-                        if(results.length > 0) {
+                        if(results.length > 0 && results[0]['idtessera'] == req.params.id) {
                             res.setHeader('Content-Type', 'text/plain');
                             res.send("ERRORE! Tessera già esistente!");
                         }
@@ -152,7 +152,7 @@ module.exports.deleteCard = async function(req, res) {
                     [req.params.id],
                     function(err, results, fields) {
 
-                        if(results.length > 0) {                                     //se tessera c'è allora cancellala
+                        if(results.length > 0 && results[0]['idtessera'] == req.params.id) {                                     //se tessera c'è allora cancellala
                             connection.execute(
                                 'DELETE FROM tessere WHERE idtessera=?',
                                 [req.params.id]
