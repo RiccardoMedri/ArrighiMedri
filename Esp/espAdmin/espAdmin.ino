@@ -1,14 +1,17 @@
+//questo script viene eseguito solamente nei nodi admin ai quali spettano privilegi di gestione
+//istanzia un webserver su cui vengono impostate diverse route
+//tramite queste route si possono gestire aggiunta/rimozione tessera, limite accessi, storico ingressi
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
 #include <WifiClient.h>
-#include <setupConnection.h>
+#include "setupConnection.h"
 
 // #define GREEN_LED 8
 // #define RED_LED 9
 
-const char* ssid     = "AndroidAPc5c2";
-const char* password = "routerpw";
+const char* ssid     = "iPhone di Riccardo (2)";
+const char* password = "RiccardoMed";
 
 const char index_html[] PROGMEM = R"rawliteral(
     <!DOCTYPE HTML><html><head>
@@ -61,10 +64,10 @@ const char index_html[] PROGMEM = R"rawliteral(
 
 ESP8266WebServer server(80);
 WiFiClient wifiClient;
-String urlAddCard = "http://192.168.68.238:3000/tessera/nuovaTessera/";
-String urlAccess = "http://192.168.68.238:3000/tessera/limitaAccessi/";
-String urlDeleteCard = "http://192.168.68.238:3000/tessera/deleteCard/";
-String urlGetData = "http://192.168.68.238:3000/timbrature/";
+String urlAddCard = "http://172.20.10.4:3000/tessera/nuovaTessera/";
+String urlAccess = "http://172.20.10.4:3000/tessera/limitaAccessi/";
+String urlDeleteCard = "http://172.20.10.4:3000/tessera/deleteCard/";
+String urlGetData = "http://172.20.10.4:3000/timbrature/";
 String macAddress = WiFi.macAddress();
 
 void setup() {
@@ -170,26 +173,12 @@ String httpRequest(String fullUrl) {
   return "Response code < 0";
 }
 
-String readString() {
-  String str = "";
-  String result = "";
-
-  while(str == "") {
-    str = Serial.readString();
-  }
-
-  if(str != "") {
-    for(int i = 0; i < str.length() - 1; ++i) {
-      result += str[i];
-    }
-  }
-
-  return result;
-}
-
 String scanUID() {
   Serial.println("GREEN LED IS ON");
-  String uidCard = readString();
+  String uidCard = "";
+  while(uidCard == "") {
+    uidCard = Serial.readString();
+  }
   Serial.println("GREEN LED IS OFF");
 
   return uidCard;

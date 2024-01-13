@@ -1,14 +1,17 @@
+//questo script viene eseguito in loop nei cosiddetti nodi "generici"
+//cioè nodi i quali non hanno privilegi di amministratore
+//compie solo la registrazione di una timbratura 
 #include <ESP8266HTTPClient.h>
 #include <WifiClient.h>
-#include <setupConnection.h>
+#include "setupConnection.h"
 
 // #define RED_LED 9
 // #define GREEN_LED 8
 
-const char* ssid     = "AndroidAPc5c2";
-const char* password = "routerpw";
+const char* ssid     = "iPhone di Riccardo (2)";
+const char* password = "RiccardoMed";
 
-String urlDB = "http://192.168.68.238:3000/tessera/";
+String urlDB = "http://172.20.10.4:3000/tessera/";
 WiFiClient wifiClient;
 String macAddress = WiFi.macAddress();
 
@@ -20,7 +23,7 @@ void setup() {
 }
 
 void loop() {
-  String idCard = readString(); // lettura tessera
+  String idCard = Serial.readString();  // lettura tessera
 
   if(idCard != "") {
     blinkLed(idCard);
@@ -31,9 +34,7 @@ bool checkID(String idCard, String url) {
     HTTPClient http;
     String urlFull = url + idCard + "-" + macAddress;
     http.begin(wifiClient, urlFull.c_str());
-
     int httpResponseCode = http.GET();
-
     if (httpResponseCode == 200) {
         http.end();
         return true;
@@ -60,19 +61,4 @@ void blinkLed(String idCard) {
             Serial.println("RED LED IS BLINKING");
         }
     }
-}
-
-String readString() {
-  String str = "";
-  String result = "";
-  
-  str = Serial.readString();
-
-  if(str != "") {
-    for(int i = 0; i < str.length() - 1; ++i) {
-        result += str[i];
-    }
-  }
-
-  return result;
 }

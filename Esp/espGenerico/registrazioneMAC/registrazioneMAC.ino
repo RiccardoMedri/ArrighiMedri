@@ -1,10 +1,13 @@
+//questo script ha lo scopo di registrare il MAC address di un nuovo nodo nel database
+//così che sia riconosciuto dai controller del webserver
+//questo script viene eseguito solo una volta in fase di registrazione 
 #include <ESP8266HTTPClient.h>
-#include <setupConnection.h>
+#include "setupConnection.h"
 
-const char* ssid     = "AndroidAPc5c2";
-const char* password = "routerpw";
+const char* ssid     = "iPhone di Riccardo (2)";
+const char* password = "RiccardoMed";
 
-String url = "http://192.168.68.238:3000/macAddress/nuovoMacAddress/";
+String url = "http://172.20.10.4:3000/macAddress/nuovoMacAddress/";
 WiFiClient wifiClient;
 String macAddress = WiFi.macAddress();
 

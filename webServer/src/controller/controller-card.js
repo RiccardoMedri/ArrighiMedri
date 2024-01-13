@@ -1,41 +1,38 @@
 const connection = require('../utils/db.js');
 
 module.exports.checkCard = async function(req, res){
-    connection.execute(
-        'SELECT mac from IndirizziMAC WHERE mac=?',
+    connection.execute( 
+        'SELECT mac from IndirizziMAC WHERE mac=?',                                                          //controlla che il mac address sia a sistema
         [req.params.mac],
         function(err, results, fields) {
-            if (results.length > 0 && results[0]['mac'] == req.params.mac) {
+            if (results.length > 0 && results[0]['mac'] == req.params.mac) {                                 //se c'è
                 connection.execute(
-                    'SELECT idtessera, ruolo, limite from tessere WHERE idtessera=?',
+                    'SELECT idtessera, ruolo, limite from tessere WHERE idtessera=?',                        //controlla che la tessera sia a sistema
                     [req.params.id],
-                    function(err, results, fields) {
-                        if (results.length > 0 && results[0]['idtessera'] == req.params.id) {
-                            dataNow = new Date().toISOString().slice(0, 10);
-                            connection.execute( // se l'idtessera esiste faccio partire la connessione al db
-                            // per verificare se il numero massimo di timbrature giornaliere è stato raggiunto
-                                `SELECT data FROM ingressi WHERE data = (SELECT MAX(data) FROM ingressi) AND idtessera = ${req.params.id} ORDER BY data DESC`,
+                    function(err, results, fields) {    
+                        if (results.length > 0 && results[0]['idtessera'] == req.params.id) {                //se c'è
+                            dataNow = new Date().toISOString().slice(0, 10);                                 //prendo la data attuale
+                            connection.execute(
+                                `SELECT data FROM ingressi WHERE data = (SELECT MAX(data) FROM ingressi) AND idtessera = ? ORDER BY data DESC`,
                                 // faccio una query innestata: nella query interna chiedo la data più recente
                                 // nella query esterna prendo tutte le date relative all'idtessera e all'ultima data
-                                [],
+                                [req.params.id],
                                 function(err, resData, fields) {
                                     check = true;
-                                    if(resData.length > 0) { // se esistono delle timbrature
-                                        for(i = 0; i < dataNow.length && check; ++i) { // ciclo per verificare se oggi ha già effettuato timbrature
-                                            if(dataNow[i] != resData[0]['data'][i]) {
-                                                check = false; // confronto l'ultima data salvata a db con quella odierna
-                                            }
+                                    if(resData.length > 0) {                                                  //se esistono delle timbrature
+                                        if(resData[0]['data'].localeCompare(dataNow) != 0) {                  //se le date sono diverse 
+                                            check = false;                                                    //poniamo check a false
                                         } 
                                         // check == false se oggi non c'è ancora stata una timbratura
-                                        if(check) { // se oggi ci sono già state timbrature
+                                        if(check) {                                                           // se oggi ci sono già state timbrature
                                             countNBadge = 0;
-                                            for(; countNBadge < resData.length; ++countNBadge); // conto il numero di timbrature
+                                            for(; countNBadge < resData.length; ++countNBadge);               // conto il numero di timbrature
 
-                                            if(countNBadge < Number(results[0]['limite'])) { // se posso fare ancora timbrature
+                                            if(countNBadge < Number(results[0]['limite']) || results[0]['limite'] == null) { // se posso fare ancora timbrature
                                                 check = false;
                                             }
                                             else {
-                                                res.send("Numero massimo di timbrature raggiunto");
+                                                res.status(403).send("Numero massimo di timbrature raggiunto");
                                             }
                                         }
                                     }
@@ -116,24 +113,34 @@ module.exports.limitAcces = async function(req, res) {
         'SELECT mac from IndirizziMAC WHERE mac=?',                                  //controlla che il mac address ci sia
         [req.params.mac],
         function(err, results, fields) {
-            
             if (results.length > 0 && results[0]['mac'] == req.params.mac) {
                 connection.execute(
-                    `UPDATE tessere SET limite = ? WHERE idtessera = ?`,
-                    [req.params.limit, req.params.idtessera],
+                    `SELECT idtessera from tessere WHERE idtessera = ?`,              //controlla che ci sia la tessera
+                    [req.params.idtessera],
                     function(err, results, fields) {
-                        res.setHeader('Content-Type', 'text/plain');
-                        if(!err) {
-                            res.send("Limite numero di accessi inserito");
+                        if (results.length > 0 && results[0]['idtessera'] == req.params.idtessera) {
+                            connection.execute(
+                                `UPDATE tessere SET limite = ? WHERE idtessera = ?`, //aggiorna il limite di accessi
+                                [req.params.limit, req.params.idtessera],
+                                function(err, results, fields) {
+                                    res.setHeader('Content-Type', 'text/plain');
+                                    if(!err) {
+                                        res.send("Limite numero di accessi inserito");
+                                    }
+                                    else {
+                                        res.send(err);
+                                    }
+                                }
+                            )
                         }
-                        else {
-                            res.send(err);
+                        else{
+                            res.send('idTessera non riconosciuto');
                         }
                     }
                 )
             }    
             else{                                                                    //se non c'è macAddress allora errore
-                res.status(404).send('MAC address non riconosciuto')
+                res.status(404).send('MAC address non riconosciuto');
             } 
         }
     )
